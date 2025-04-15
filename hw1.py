@@ -25,16 +25,16 @@ def preprocess(X,y):
     avg_x = np.mean(X)
     std_dev_x = np.std(X)
 
-    standart_x = (X - avg_x) / std_dev_x
+    X = (X - avg_x) / std_dev_x
 
     avg_y = np.mean(y)
     std_dev_y = np.std(y)
 
-    standart_y = (y - avg_y) / std_dev_y
+    y = (y - avg_y) / std_dev_y
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
-    return standart_x, standart_y
+    return X, y
 
 def apply_bias_trick(X):
     """
@@ -50,7 +50,8 @@ def apply_bias_trick(X):
     ###########################################################################
     # TODO: Implement the bias trick by adding a column of ones to the data.                             #
     ###########################################################################
-    pass
+    ones = np.ones(X.shape[0])
+    X = np.column_stack((ones,X))
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
