@@ -22,11 +22,19 @@ def preprocess(X,y):
     ###########################################################################
     # TODO: Implement the normalization function.                             #
     ###########################################################################
-    pass
+    avg_x = np.mean(X)
+    std_dev_x = np.std(X)
+
+    standart_x = (X - avg_x) / std_dev_x
+
+    avg_y = np.mean(y)
+    std_dev_y = np.std(y)
+
+    standart_y = (y - avg_y) / std_dev_y
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
-    return X, y
+    return standart_x, standart_y
 
 def apply_bias_trick(X):
     """
