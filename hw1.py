@@ -203,7 +203,13 @@ def find_best_learning_rate(X_train, y_train, X_val, y_val, iterations):
     ###########################################################################
     # TODO: Implement the function and find the best eta value.             #
     ###########################################################################
-    pass
+    m = X_train.shape[1] 
+    np.random.seed(30)
+    random_theta = np.random.random()
+    for eta in etas:
+        theta, _ = gradient_descent(X_train,y_train,random_theta,eta,iterations)
+        loss = compute_loss(X_val,y_val,theta)
+        eta_dict[eta] =  loss
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
