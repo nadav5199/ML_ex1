@@ -110,7 +110,13 @@ def gradient_descent(X, y, theta, eta, num_iters):
     ###########################################################################
     # TODO: Implement the gradient descent optimization algorithm.            #
     ###########################################################################
-    pass
+    m = X.shape[0]
+    for i in range(num_iters):
+        mult = np.dot(X,theta)
+        inner = mult - y
+        theta = theta - (eta / m) * np.dot(X.T, inner)
+        loss_value = compute_loss(X,y,theta)
+        J_history.append(loss_value)
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
