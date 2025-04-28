@@ -266,7 +266,7 @@ def forward_feature_selection(X_train, y_train, X_val, y_val, best_eta, iteratio
 
 
             base_theta = np.zeros(bias_train.shape[1])
-            theta = gradient_descent_stop_condition(bias_train,y_train,base_theta,best_eta,iterations)
+            theta, _ = gradient_descent_stop_condition(bias_train,y_train,base_theta,best_eta,iterations)
             curr_loss = compute_loss(bias_val,y_val,theta)
 
             if curr_loss < best_loss:
@@ -296,7 +296,25 @@ def create_square_features(df):
     ###########################################################################
     # TODO: Implement the function to add polynomial features                 #
     ###########################################################################
-    pass
+    # Add squared features
+    feature_cols = df.columns
+    for feature in feature_cols:
+        # Create squared feature with proper naming
+        squared_name = f"{feature}^2"
+        df_poly[squared_name] = df[feature] ** 2
+    
+    # Add interaction terms between feature pairs
+    for i in range(len(feature_cols)):
+        first_feat = feature_cols[i]
+        
+        # Only do pairs (j > i) to avoid duplicates
+        for j in range(i + 1, len(feature_cols)):
+            second_feat = feature_cols[j]
+            
+            # Create interaction feature with descriptive name
+            interaction_name = f"{first_feat}*{second_feat}"
+            df_poly[interaction_name] = df[first_feat] * df[second_feat]
+    
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
