@@ -248,7 +248,33 @@ def forward_feature_selection(X_train, y_train, X_val, y_val, best_eta, iteratio
     #####c######################################################################
     # TODO: Implement the function and find the best eta value.             #
     ###########################################################################
-    pass
+    new_feature = None
+    best_loss = float('inf')
+    num_features = X_train.shape[1]
+    for _ in range(5):
+        for i in range(num_features):
+            if i in selected_features:
+                continue
+            
+            curr = selected_features + [i]
+
+            sub_train = X_train[:,curr]
+            sub_val = X_val[:, curr]
+
+            bias_val = apply_bias_trick(sub_val)
+            bias_train = apply_bias_trick(sub_train)
+
+
+            base_theta = np.zeros(bias_train.shape[1])
+            theta = gradient_descent_stop_condition(bias_train,y_train,base_theta,best_eta,iterations)
+            curr_loss = compute_loss(bias_val,y_val,theta)
+
+            if curr_loss < best_loss:
+                new_feature = i
+                best_loss = curr_loss
+
+        selected_features.append(new_feature)
+
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
