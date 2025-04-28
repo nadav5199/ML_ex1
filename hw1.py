@@ -22,8 +22,8 @@ def preprocess(X,y):
     ###########################################################################
     # TODO: Implement the normalization function.                             #
     ###########################################################################
-    avg_x = np.mean(X)
-    std_dev_x = np.std(X)
+    avg_x = np.mean(X, axis=0)
+    std_dev_x = np.std(X, axis=0)
 
     X = (X - avg_x) / std_dev_x
 
@@ -78,7 +78,7 @@ def compute_loss(X, y, theta):
     prediction = np.dot(X,theta)
     error = prediction - y
 
-    J = (1/2 * len(y)) * np.sum(np.square(error))
+    J = np.mean(np.square(error)) / 2
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
@@ -114,9 +114,10 @@ def gradient_descent(X, y, theta, eta, num_iters):
     for i in range(num_iters):
         mult = np.dot(X,theta)
         inner = mult - y
-        theta = theta - (eta / m) * np.dot(X.T, inner)
         loss_value = compute_loss(X,y,theta)
         J_history.append(loss_value)
+
+        theta = theta - (eta / m) * np.dot(X.T, inner)
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
@@ -176,7 +177,15 @@ def gradient_descent_stop_condition(X, y, theta, eta, max_iter, epsilon=1e-8):
     ###########################################################################
     # TODO: Implement the gradient descent with stop condition optimization algorithm.  #
     ###########################################################################
-    pass
+    m = X.shape[0]
+    for i in range(max_iter):
+        mult = np.dot(X,theta)
+        inner = mult - y
+        theta = theta - (eta / m) * np.dot(X.T, inner)
+        loss_value = compute_loss(X,y,theta)
+        J_history.append(loss_value)
+        if len(J_history) >= 2 and (J_history[-2] - J_history[-1] ) < epsilon:
+            break
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
@@ -210,6 +219,8 @@ def find_best_learning_rate(X_train, y_train, X_val, y_val, iterations):
         theta, _ = gradient_descent(X_train,y_train,random_theta,eta,iterations)
         loss = compute_loss(X_val,y_val,theta)
         eta_dict[eta] =  loss
+
+    
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
