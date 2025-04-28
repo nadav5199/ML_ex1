@@ -296,24 +296,29 @@ def create_square_features(df):
     ###########################################################################
     # TODO: Implement the function to add polynomial features                 #
     ###########################################################################
-    # Add squared features
-    feature_cols = df.columns
-    for feature in feature_cols:
-        # Create squared feature with proper naming
-        squared_name = f"{feature}^2"
-        df_poly[squared_name] = df[feature] ** 2
+    squared = {}
+    for col in df_poly.columns:
+        col_name = f"{col}^2"
+        new_col =  np.square(df_poly[col])
+
+        squared[col_name] = new_col
+    cols = df_poly.columns.tolist()
+
+    mult = {}
+
+    for i in range(len(cols)):
+        for j in range(i + 1, len(cols)):
+            col_name = f"{cols[i]} * {cols[j]}"
+
+            new_col = df_poly[cols[i]] * df_poly[cols[j]]
+
+            mult[col_name] = new_col
     
-    # Add interaction terms between feature pairs
-    for i in range(len(feature_cols)):
-        first_feat = feature_cols[i]
-        
-        # Only do pairs (j > i) to avoid duplicates
-        for j in range(i + 1, len(feature_cols)):
-            second_feat = feature_cols[j]
-            
-            # Create interaction feature with descriptive name
-            interaction_name = f"{first_feat}*{second_feat}"
-            df_poly[interaction_name] = df[first_feat] * df[second_feat]
+    mult_df = pd.DataFrame(mult)
+    squared_df = pd.DataFrame(squared)
+
+    df_poly = pd.concat([mult_df,squared_df,df],axis=1)
+    
     
     ###########################################################################
     #                             END OF YOUR CODE                            #
